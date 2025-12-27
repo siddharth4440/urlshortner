@@ -20,7 +20,8 @@ class DatabaseSeeder extends Seeder
         $roles = [
             'SuperAdmin' => [
                 'create admin',
-                'list url all'
+                'list url all',
+                'create company'
             ],
             'Admin' => [
                 'create admin',
@@ -44,8 +45,8 @@ class DatabaseSeeder extends Seeder
 
         User::create([
             'name' => 'Super Admin',
-            'email' => 'superadmin@example.com',
-            'password' => bcrypt('superadmin@123')
+            'email' => 's@gmail.com',
+            'password' => bcrypt('123')
         ])->assignRole('SuperAdmin');
     }
 }

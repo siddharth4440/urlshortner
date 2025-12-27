@@ -1,5 +1,5 @@
 <!-- Stored in resources/views/home.blade.php -->
-@extends('layouts.app')
+@extends('layouts.guest')
 
 @section('title', 'Home Page')
 

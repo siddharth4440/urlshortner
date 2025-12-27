@@ -26,7 +26,6 @@
     </header>
 
     <div class="container">
-        @include('partials.aside')
         @yield('content')
     </div>
 

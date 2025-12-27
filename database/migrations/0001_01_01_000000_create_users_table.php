@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('company', function (Blueprint $table) {
+        Schema::create('companies', function (Blueprint $table) {
             $table->id();
             $table->string('title');
             $table->timestamps();
@@ -32,7 +32,7 @@ return new class extends Migration
 
             $table->foreign('company_id')
                 ->references('id')
-                ->on('company')
+                ->on('companies')
                 ->onDelete('cascade');
 
             $table->timestamps();
@@ -59,7 +59,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('company');
+        Schema::dropIfExists('companies');
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
