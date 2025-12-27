@@ -7,7 +7,7 @@
     <div class="p-4 sm:ml-64">
 
 <!-- Button to open the create/edit modal -->
-<div class="max-w-sm mx-auto mb-6">
+<div class="">
         <button id="open-create-company" type="button" class="text-white bg-brand box-border border border-transparent hover:bg-brand-strong focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">New Company</button>
 </div>
 

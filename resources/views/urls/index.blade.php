@@ -7,11 +7,13 @@
     <div class="p-4 sm:ml-64">
 
         <!-- Button to open the create/edit modal -->
-        <div class="max-w-sm mx-auto mb-6">
-            <button id="open-create-url" type="button"
-                class="text-white bg-brand box-border border border-transparent hover:bg-brand-strong focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">New
-                url</button>
-        </div>
+        @can('create url')
+            <div class="">
+                <button id="open-create-url" type="button"
+                    class="text-white bg-brand box-border border border-transparent hover:bg-brand-strong focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">New
+                    url</button>
+            </div>
+        @endcan
 
         <div class="relative overflow-x-auto bg-white shadow-xs rounded-base border border-default">
 
@@ -22,13 +24,7 @@
                             url
                         </th>
                         <th scope="col" class="px-6 py-3 font-medium">
-                            Company name
-                        </th>
-                        <th scope="col" class="px-6 py-3 font-medium">
-                            Email
-                        </th>
-                        <th scope="col" class="px-6 py-3 font-medium">
-                            Role
+                            short url
                         </th>
                         <th scope="col" class="px-6 py-3 font-medium">
                             Action
@@ -45,16 +41,21 @@
                     @else
                         @foreach ($urls as $url)
                             <tr class="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-default">
-                                <td class="px-6 py-4">
-                                    <a href="#" class="font-medium text-fg-brand hover:underline open-url-modal"
-                                        data-id="{{ $url->id }}" data-destinationUrl="{{ $url->destination_url }}"
-                                        data-defaultShortUrl="{{ $url->default_short_url }}">Edit</a>
-                                </td>
                                 <td scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
                                     {{ $url->destination_url }}
                                 </td>
                                 <td scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
                                     {{ $url->default_short_url }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <a href="#" class="font-medium text-fg-brand hover:underline open-url-modal"
+                                        data-id="{{ $url->id }}" data-destinationUrl="{{ $url->destination_url }}"
+                                        data-defaultShortUrl="{{ $url->default_short_url }}">Edit</a>
+                                    <form action="{{ route('urls.destroy', $url->id) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="font-medium text-fg-brand hover:underline">Delete</button>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach

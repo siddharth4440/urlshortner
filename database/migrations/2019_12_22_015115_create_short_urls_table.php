@@ -25,12 +25,17 @@ class CreateShortUrlsTable extends Migration
 
             $table->string('default_short_url');
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('company_id');
             $table->boolean('single_use');
             $table->boolean('track_visits');
             $table->timestamps();
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
+                ->onDelete('cascade');
+            $table->foreign('company_id')
+                ->references('id')
+                ->on('companies')
                 ->onDelete('cascade');
         });
     }

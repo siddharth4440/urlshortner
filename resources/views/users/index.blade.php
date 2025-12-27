@@ -7,7 +7,7 @@
     <div class="p-4 sm:ml-64">
 
 <!-- Button to open the create/edit modal -->
-<div class="max-w-sm mx-auto mb-6">
+<div class="">
         <button id="open-create-user" type="button" class="text-white bg-brand box-border border border-transparent hover:bg-brand-strong focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">New user</button>
 </div>
 
@@ -156,7 +156,7 @@
                         nameInput.value = '';
                         idInput.value = '';
                         if(createAdmin) { roleInputAdmin.checked = true;}
-                        if(createMember) { roleInputMember.checked = true;}
+                        if(!createAdmin && createMember) { roleInputMember.checked = true;}
                         if(companySelect) companySelect.value = '';
                         // remove _method name so it's a normal POST
                         methodInput.removeAttribute('name');

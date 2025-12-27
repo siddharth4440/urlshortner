@@ -223,4 +223,6 @@ return [
     |
     */
     'url_key_generator' => \AshAllenDesign\ShortURL\Classes\KeyGenerator::class,
+
+    'track_visits' => false,
 ];
