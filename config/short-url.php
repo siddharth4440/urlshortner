@@ -75,7 +75,7 @@ return [
     | "app.url" config value, set this field to null.
     |
     */
-    'default_url' => null,
+    'default_url' => env('APP_URL', 'http://localhost:8000'),
 
     /*
     |--------------------------------------------------------------------------
@@ -103,7 +103,7 @@ return [
     | method.
     |
     */
-    'enforce_https' => true,
+    'enforce_https' => env('SHORT_URL_ENFORCE_HTTPS', true),
 
     /*
     |--------------------------------------------------------------------------

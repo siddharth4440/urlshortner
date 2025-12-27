@@ -12,14 +12,15 @@ class UserController extends Controller
     public function index()
     {
         $users = User::with('company');
-        if (!Auth::user()->hasRole('SuperAdmin')) {
+        $is_super_admin = Auth::user()->hasRole('SuperAdmin');
+        if (!$is_super_admin) {
             $users = $users->where('company_id', Auth::user()->company_id);
             $role = (!Auth::user()->hasRole('Admin')) ? 'Member' : ['Admin', 'Member'];
             $users = $users->role($role);
         }
-        $users = $users->get();
+        $users = $users->orderBy('name')->paginate(10);
 
-        $companies = Company::all();
+        $companies = ($is_super_admin) ? Company::all() : Company::where('id', Auth::user()->company_id)->get();
         return view('users.index', compact('users', 'companies'));
     }
 
@@ -31,7 +32,7 @@ class UserController extends Controller
         $user->email = $request->input('email');
         $user->password = bcrypt($request->input('password'));
         $user->company_id = $request->input('company_id');
-        $user->assignRole($request->input('Role'));
+        $user->syncRoles($request->input('Role'));
         $user->save();
 
         return redirect()->route('users.index');

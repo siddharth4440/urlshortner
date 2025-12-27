@@ -43,26 +43,31 @@
                     @else
                         @foreach ($users as $user)
                             <tr class="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-default">
-                                <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
+                                <td scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
                                     {{ $user->name }}
-                                </th>
-                                <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
+                                </td>
+                                <td scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
                                     {{ $user->company->title ?? 'N/A' }}
-                                </th>
-                                <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
+                                </td>
+                                <td scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
                                     {{ $user->email ?? 'N/A' }}
-                                </th>
-                                <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
+                                </td>
+                                <td scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
                                     {{ $user->roles()->pluck('name') ?? 'N/A' }}
-                                </th>
+                                </td>
                                 <td class="px-6 py-4">
-                                    <a href="#" class="font-medium text-fg-brand hover:underline open-user-modal" data-id="{{ $user->id }}" data-name="{{ $user->name }}" data-company="{{ $user->company->id ?? '' }}">Edit</a>
+                                    @php
+                                    $user->role = $user->roles()->pluck('name')->first();
+                                    @endphp
+                                    <a href="#" class="font-medium text-fg-brand hover:underline open-user-modal" data-user="{{ $user }}">Edit</a>
                                 </td>
                             </tr>
                     @endforeach
+                    
                     @endif
                 </tbody>
             </table>
+            {{ $users->links('vendor.pagination.tailwind') }}
         </div>
 
         <!-- Create / Edit Company Modal -->
@@ -98,7 +103,9 @@
                         @can('create admin')
                         <input type="radio" value="Admin" id="user-Role-admin" name="Role" class="" placeholder="user Role" required />Admin
                         @endcan
-                        <input type="radio" value="Member" id="user-Role-editor" name="Role" class="" placeholder="user Role" required />Member
+                        @can('create member')
+                        <input type="radio" value="Member" id="user-Role-member" name="Role" class="" placeholder="user Role" required />Member
+                        @endcan
                     </div>
 
                     <div class="mb-4">
@@ -123,13 +130,17 @@
 
         <script>
             (function(){
+                const createAdmin = {{ auth()->user()->can('create admin') }};
+                const createMember ="{{ auth()->user()->can('create member') }}";
                 const modal = document.getElementById('user-modal');
                 const backdrop = document.getElementById('user-modal-backdrop');
                 const closeBtn = document.getElementById('user-modal-close');
                 const cancelBtn = document.getElementById('user-cancel');
                 const openCreateBtn = document.getElementById('open-create-user');
-                const companyForm = document.getElementById('user-form');
                 const nameInput = document.getElementById('user-name');
+                const emailInput = document.getElementById('user-email');
+                const roleInputAdmin = document.getElementById('user-Role-admin');
+                const roleInputMember = document.getElementById('user-Role-member');
                 const idInput = document.getElementById('user-id');
                 const companySelect = document.getElementById('user-company-id');
                 const methodInput = document.getElementById('user-method');
@@ -141,8 +152,11 @@
                     if(mode === 'create'){
                         modalTitle.textContent = 'Create user';
                         submitBtn.textContent = 'Create';
+                        emailInput.value = '';
                         nameInput.value = '';
                         idInput.value = '';
+                        if(createAdmin) { roleInputAdmin.checked = true;}
+                        if(createMember) { roleInputMember.checked = true;}
                         if(companySelect) companySelect.value = '';
                         // remove _method name so it's a normal POST
                         methodInput.removeAttribute('name');
@@ -150,9 +164,11 @@
                     } else if(mode === 'edit'){
                         modalTitle.textContent = 'Edit user';
                         submitBtn.textContent = 'Save changes';
+                        emailInput.value = user.email || '';
                         nameInput.value = user.name || '';
                         idInput.value = user.id;
-                        if(companySelect) companySelect.value = user.companyId || '';
+                        (user.role == 'Admin') ? roleInputAdmin.checked = true : roleInputMember.checked = true;
+                        if(companySelect) companySelect.value = user.company.id || '';
                     }
 
                     modal.classList.remove('hidden');
@@ -178,10 +194,8 @@
                 document.querySelectorAll('.open-user-modal').forEach(function(el){
                     el.addEventListener('click', function(e){
                         e.preventDefault();
-                        const id = this.dataset.id;
-                        const name = this.dataset.name;
-                        const companyId = this.dataset.company || '';
-                        openModal('edit', { id: id, name: name, companyId: companyId });
+                        const user = JSON.parse(this.dataset.user);
+                        openModal('edit', user);
                     });
                 });
             })();

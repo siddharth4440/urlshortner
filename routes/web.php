@@ -1,8 +1,9 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ShortUrlController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CompanyController;
-use App\Http\Controllers\MemberController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -21,13 +22,11 @@ Route::get('/register', function () {
 
 // Protected dashboard route
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('/companies', CompanyController::class)->names('companies');
 
     Route::resource('/users', UserController::class)->names('users');
 
-    Route::resource('/members', MemberController::class)->names('members');
+    Route::resource('/urls', ShortUrlController::class)->names('urls');
 });
