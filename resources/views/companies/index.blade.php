@@ -4,12 +4,14 @@
 @section('title', 'Home Page')
 
 @section('content')
-    <div class="p-4 sm:ml-64">
+    <div class="p-4 sm:ml-64 w-full">
 
-<!-- Button to open the create/edit modal -->
-<div class="">
-        <button id="open-create-company" type="button" class="text-white bg-brand box-border border border-transparent hover:bg-brand-strong focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">New Company</button>
-</div>
+        <!-- Button to open the create/edit modal -->
+        <div class="">
+            <button id="open-create-company" type="button"
+                class="text-white bg-brand box-border border border-transparent hover:bg-brand-strong focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none mb-4">New
+                Company</button>
+        </div>
 
         <div class="relative overflow-x-auto bg-white shadow-xs rounded-base border border-default">
 
@@ -38,17 +40,24 @@
                                     {{ $company->title }}
                                 </th>
                                 <td class="px-6 py-4">
-                                    <a href="#" class="font-medium text-fg-brand hover:underline open-company-modal" data-id="{{ $company->id }}" data-name="{{ $company->title }}">Edit</a>
+                                    <a href="#" class="font-medium text-fg-brand hover:underline open-company-modal"
+                                        data-id="{{ $company->id }}" data-name="{{ $company->title }}">Edit</a>
+                                    <form action="{{ route('companies.destroy', $company->id) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="font-medium text-fg-brand hover:underline">Delete</button>
+                                    </form>
                                 </td>
                             </tr>
-                    @endforeach
+                        @endforeach
                     @endif
                 </tbody>
             </table>
         </div>
 
         <!-- Create / Edit Company Modal -->
-        <div id="company-modal" class="fixed inset-0 z-50 hidden items-center justify-center px-4" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div id="company-modal" class="fixed inset-0 z-50 hidden items-center justify-center px-4"
+            aria-labelledby="modal-title" role="dialog" aria-modal="true">
             <div class="fixed inset-0 bg-black/50" id="company-modal-backdrop"></div>
 
             <div class="bg-white rounded-base shadow-lg max-w-lg w-full mx-auto z-10 p-6">
@@ -65,19 +74,23 @@
 
                     <div class="mb-4">
                         <label for="company-name" class="block mb-2 text-sm font-medium text-body">Company name</label>
-                        <input type="text" id="company-name" name="title" class="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body" placeholder="Company name" required />
+                        <input type="text" id="company-name" name="title"
+                            class="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body"
+                            placeholder="Company name" required />
                     </div>
 
                     <div class="flex items-center justify-end gap-3">
-                        <button type="button" id="company-cancel" class="text-body px-4 py-2 rounded-base border">Cancel</button>
-                        <button type="submit" id="company-submit" class="text-white bg-brand box-border border border-transparent hover:bg-brand-strong focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5">Create</button>
+                        <button type="button" id="company-cancel"
+                            class="text-body px-4 py-2 rounded-base border">Cancel</button>
+                        <button type="submit" id="company-submit"
+                            class="text-white bg-brand box-border border border-transparent hover:bg-brand-strong focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5">Create</button>
                     </div>
                 </form>
             </div>
         </div>
 
         <script>
-            (function(){
+            (function () {
                 const modal = document.getElementById('company-modal');
                 const backdrop = document.getElementById('company-modal-backdrop');
                 const closeBtn = document.getElementById('company-modal-close');
@@ -93,8 +106,8 @@
                 const createUrl = "{{ route('companies.store') }}";
                 const baseUpdateUrl = "{{ url('companies') }}"; // we'll append /{id}
 
-                function openModal(mode, company){
-                    if(mode === 'create'){
+                function openModal(mode, company) {
+                    if (mode === 'create') {
                         modalTitle.textContent = 'Create Company';
                         submitBtn.textContent = 'Create';
                         nameInput.value = '';
@@ -102,7 +115,7 @@
                         // remove _method name so it's a normal POST
                         methodInput.removeAttribute('name');
                         methodInput.value = '';
-                    } else if(mode === 'edit'){
+                    } else if (mode === 'edit') {
                         modalTitle.textContent = 'Edit Company';
                         submitBtn.textContent = 'Save changes';
                         nameInput.value = company.name || '';
@@ -114,13 +127,13 @@
                     modal.classList.add('flex');
                 }
 
-                function closeModal(){
+                function closeModal() {
                     modal.classList.remove('flex');
                     modal.classList.add('hidden');
                 }
 
                 // wire buttons
-                openCreateBtn.addEventListener('click', function(e){
+                openCreateBtn.addEventListener('click', function (e) {
                     e.preventDefault();
                     openModal('create');
                 });
@@ -130,8 +143,8 @@
                 backdrop.addEventListener('click', closeModal);
 
                 // wire edit links
-                document.querySelectorAll('.open-company-modal').forEach(function(el){
-                    el.addEventListener('click', function(e){
+                document.querySelectorAll('.open-company-modal').forEach(function (el) {
+                    el.addEventListener('click', function (e) {
                         e.preventDefault();
                         const id = this.dataset.id;
                         const name = this.dataset.name;

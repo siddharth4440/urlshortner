@@ -4,12 +4,14 @@
 @section('title', 'Home Page')
 
 @section('content')
-    <div class="p-4 sm:ml-64">
+    <div class="p-4 sm:ml-64 w-full">
 
-<!-- Button to open the create/edit modal -->
-<div class="">
-        <button id="open-create-user" type="button" class="text-white bg-brand box-border border border-transparent hover:bg-brand-strong focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">New user</button>
-</div>
+        <!-- Button to open the create/edit modal -->
+        <div class="">
+            <button id="open-create-user" type="button"
+                class="text-white bg-brand box-border border border-transparent hover:bg-brand-strong focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none mb-4">New
+                user</button>
+        </div>
 
         <div class="relative overflow-x-auto bg-white shadow-xs rounded-base border border-default">
 
@@ -27,6 +29,9 @@
                         </th>
                         <th scope="col" class="px-6 py-3 font-medium">
                             Role
+                        </th>
+                        <th scope="col" class="px-6 py-3 font-medium">
+                            Status
                         </th>
                         <th scope="col" class="px-6 py-3 font-medium">
                             Action
@@ -55,15 +60,24 @@
                                 <td scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
                                     {{ $user->roles()->pluck('name') ?? 'N/A' }}
                                 </td>
+                                <td scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
+                                    {{ $user->invitation_accepted ? 'Accepted' : 'Pending' }}
+                                </td>
                                 <td class="px-6 py-4">
                                     @php
-                                    $user->role = $user->roles()->pluck('name')->first();
+                                        $user->role = $user->roles()->pluck('name')->first();
                                     @endphp
-                                    <a href="#" class="font-medium text-fg-brand hover:underline open-user-modal" data-user="{{ $user }}">Edit</a>
+                                    <a href="#" class="font-medium text-fg-brand hover:underline open-user-modal"
+                                        data-user="{{ $user }}">Edit</a>
+                                    <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="font-medium text-fg-brand hover:underline">Delete</button>
+                                    </form>
                                 </td>
                             </tr>
-                    @endforeach
-                    
+                        @endforeach
+
                     @endif
                 </tbody>
             </table>
@@ -71,7 +85,8 @@
         </div>
 
         <!-- Create / Edit Company Modal -->
-        <div id="user-modal" class="fixed inset-0 z-50 hidden items-center justify-center px-4" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div id="user-modal" class="fixed inset-0 z-50 hidden items-center justify-center px-4"
+            aria-labelledby="modal-title" role="dialog" aria-modal="true">
             <div class="fixed inset-0 bg-black/50" id="user-modal-backdrop"></div>
 
             <div class="bg-white rounded-base shadow-lg max-w-lg w-full mx-auto z-10 p-6">
@@ -88,50 +103,61 @@
 
                     <div class="mb-4">
                         <label for="name" class="block mb-2 text-sm font-medium text-body">user name</label>
-                        <input type="text" id="user-name" name="name" class="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body" placeholder="user name" required />
+                        <input type="text" id="user-name" name="name"
+                            class="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body"
+                            placeholder="user name" required />
                     </div>
                     <div class="mb-4">
                         <label for="email" class="block mb-2 text-sm font-medium text-body">user email</label>
-                        <input type="email" id="user-email" name="email" class="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body" placeholder="user email" required />
+                        <input type="email" id="user-email" name="email"
+                            class="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body"
+                            placeholder="user email" required />
                     </div>
                     <div class="mb-4">
                         <label for="password" class="block mb-2 text-sm font-medium text-body">user password</label>
-                        <input type="password" id="user-password" name="password" class="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body" placeholder="user password" required />
+                        <input type="password" id="user-password" name="password"
+                            class="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body"
+                            placeholder="user password" required />
                     </div>
                     <div class="mb-4">
                         <label for="Role" class="block mb-2 text-sm font-medium text-body">user Role</label>
                         @can('create admin')
-                        <input type="radio" value="Admin" id="user-Role-admin" name="Role" class="" placeholder="user Role" required />Admin
+                            <input type="radio" value="Admin" id="user-Role-admin" name="Role" class="" placeholder="user Role"
+                                required />Admin
                         @endcan
                         @can('create member')
-                        <input type="radio" value="Member" id="user-Role-member" name="Role" class="" placeholder="user Role" required />Member
+                            <input type="radio" value="Member" id="user-Role-member" name="Role" class=""
+                                placeholder="user Role" required />Member
                         @endcan
                     </div>
 
                     <div class="mb-4">
                         <label for="company" class="block mb-2 text-sm font-medium text-body">Company</label>
-                        <select id="user-company-id" name="company_id" class="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs">
+                        <select id="user-company-id" name="company_id"
+                            class="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs">
                             <option value="">-- Select Company --</option>
                             @foreach($companies as $company)
                                 <option value="{{ $company->id }}">
-                                {{ $company->title }}
-                            </option>
+                                    {{ $company->title }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
 
                     <div class="flex items-center justify-end gap-3">
-                        <button type="button" id="user-cancel" class="text-body px-4 py-2 rounded-base border">Cancel</button>
-                        <button type="submit" id="user-submit" class="text-white bg-brand box-border border border-transparent hover:bg-brand-strong focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5">Create</button>
+                        <button type="button" id="user-cancel"
+                            class="text-body px-4 py-2 rounded-base border">Cancel</button>
+                        <button type="submit" id="user-submit"
+                            class="text-white bg-brand box-border border border-transparent hover:bg-brand-strong focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5">Create</button>
                     </div>
                 </form>
             </div>
         </div>
 
         <script>
-            (function(){
+            (function () {
                 const createAdmin = {{ auth()->user()->can('create admin') }};
-                const createMember ="{{ auth()->user()->can('create member') }}";
+                const createMember = "{{ auth()->user()->can('create member') }}";
                 const modal = document.getElementById('user-modal');
                 const backdrop = document.getElementById('user-modal-backdrop');
                 const closeBtn = document.getElementById('user-modal-close');
@@ -148,40 +174,40 @@
                 const modalTitle = document.getElementById('user-modal-title');
 
 
-                function openModal(mode, user){
-                    if(mode === 'create'){
+                function openModal(mode, user) {
+                    if (mode === 'create') {
                         modalTitle.textContent = 'Create user';
                         submitBtn.textContent = 'Create';
                         emailInput.value = '';
                         nameInput.value = '';
                         idInput.value = '';
-                        if(createAdmin) { roleInputAdmin.checked = true;}
-                        if(!createAdmin && createMember) { roleInputMember.checked = true;}
-                        if(companySelect) companySelect.value = '';
+                        if (createAdmin) { roleInputAdmin.checked = true; }
+                        if (!createAdmin && createMember) { roleInputMember.checked = true; }
+                        if (companySelect) companySelect.value = '';
                         // remove _method name so it's a normal POST
                         methodInput.removeAttribute('name');
                         methodInput.value = '';
-                    } else if(mode === 'edit'){
+                    } else if (mode === 'edit') {
                         modalTitle.textContent = 'Edit user';
                         submitBtn.textContent = 'Save changes';
                         emailInput.value = user.email || '';
                         nameInput.value = user.name || '';
                         idInput.value = user.id;
                         (user.role == 'Admin') ? roleInputAdmin.checked = true : roleInputMember.checked = true;
-                        if(companySelect) companySelect.value = user.company.id || '';
+                        if (companySelect) companySelect.value = user.company.id || '';
                     }
 
                     modal.classList.remove('hidden');
                     modal.classList.add('flex');
                 }
 
-                function closeModal(){
+                function closeModal() {
                     modal.classList.remove('flex');
                     modal.classList.add('hidden');
                 }
 
                 // wire buttons
-                openCreateBtn.addEventListener('click', function(e){
+                openCreateBtn.addEventListener('click', function (e) {
                     e.preventDefault();
                     openModal('create');
                 });
@@ -191,8 +217,8 @@
                 backdrop.addEventListener('click', closeModal);
 
                 // wire edit links
-                document.querySelectorAll('.open-user-modal').forEach(function(el){
-                    el.addEventListener('click', function(e){
+                document.querySelectorAll('.open-user-modal').forEach(function (el) {
+                    el.addEventListener('click', function (e) {
                         e.preventDefault();
                         const user = JSON.parse(this.dataset.user);
                         openModal('edit', user);

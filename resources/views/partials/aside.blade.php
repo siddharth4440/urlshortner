@@ -11,7 +11,7 @@
 <aside id="default-sidebar"
     class="fixed top-0 left-0 z-40 w-64 h-full transition-transform -translate-x-full sm:translate-x-0"
     aria-label="Sidebar">
-    <div class="h-full px-3 py-4 overflow-y-auto dark:bg-black bg-white border-e border-default">
+    <div class="h-full px-3 py-4 overflow-y-auto dark:bg-gray-800 bg-white">
         <ul class="space-y-2 font-medium">
             <li>
                 <a href="{{ route('urls.index') }}"
@@ -67,7 +67,7 @@
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M16 12H4m12 0-4 4m4-4-4-4m3-4h2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-2" />
                         </svg>
-                        <span class="flex-1 ms-3 whitespace-nowrap">Sign Out</span>
+                        <span class="flex ms-3 whitespace-nowrap">Sign Out</span>
                     </button>
                 </form>
             </li>

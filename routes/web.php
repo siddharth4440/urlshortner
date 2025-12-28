@@ -3,6 +3,7 @@
 use App\Http\Controllers\ShortUrlController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\InviteController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -24,3 +25,5 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('/urls', ShortUrlController::class)->names('urls');
 });
+
+Route::get('/accept-invite/{token}', [InviteController::class, 'acceptInvite'])->name('invite.accept');

@@ -23,7 +23,7 @@ class CompanyController extends Controller
         return redirect()->route('companies.index');
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
         $company = Company::findOrFail($id);
         $company->delete();
